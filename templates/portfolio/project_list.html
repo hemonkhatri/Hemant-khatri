@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Projects — {{ profile.full_name|default:"Portfolio" }}{% endblock %}
+
+{% block content %}
+<section class="intro">
+  <h1 class="display display-sm">Projects</h1>
+  <p class="lede">Things I've designed, built, and kept running.</p>
+
+  <form class="search" method="get" action="{% url 'portfolio:project_list' %}" role="search">
+    <label class="sr-only" for="q">Search projects</label>
+    <input id="q" type="search" name="q" value="{{ query }}" placeholder="Search by name or technology">
+    <button class="btn" type="submit">Search</button>
+    {% if query %}<a class="btn btn-quiet" href="{% url 'portfolio:project_list' %}">Clear</a>{% endif %}
+  </form>
+</section>
+
+<section class="band">
+  {% if projects %}
+    <ul class="work">
+      {% for project in projects %}
+        <li class="work-row">
+          <a class="work-link" href="{{ project.get_absolute_url }}">
+            {% if project.image %}
+              <img class="work-thumb" src="{{ project.image.url }}" alt="" loading="lazy">
+            {% endif %}
+            <span class="work-body">
+              <span class="work-title">{{ project.title }}</span>
+              <span class="work-summary">{{ project.summary }}</span>
+              {% if project.tech_list %}
+                <span class="chips">
+                  {% for tech in project.tech_list %}<span class="chip">{{ tech }}</span>{% endfor %}
+                </span>
+              {% endif %}
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty">
+      {% if query %}
+        <p>Nothing matches “{{ query }}”.</p>
+        <p><a class="btn btn-quiet" href="{% url 'portfolio:project_list' %}">Show every project</a></p>
+      {% else %}
+        <p>No projects yet.</p>
+        <p>Add your first one in the admin under Projects.</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

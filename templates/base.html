@@ -1,0 +1,39 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ profile.full_name|default:"Portfolio" }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ profile.headline|default:'Developer portfolio' }}{% endblock %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="shell">
+    {% include "partials/sidebar.html" %}
+
+    <main class="main" id="main">
+      {% if messages %}
+        <ul class="flash">
+          {% for message in messages %}
+            <li class="flash-item flash-{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+
+      <footer class="foot">
+        <p>{{ profile.full_name|default:"Portfolio" }}{% if profile.location %} · {{ profile.location }}{% endif %}</p>
+        <p>Built with Django. Last updated {{ profile.updated_at|date:"F Y" }}.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="{% static 'js/main.js' %}" defer></script>
+</body>
+</html>

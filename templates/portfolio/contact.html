@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Contact — {{ profile.full_name|default:"Portfolio" }}{% endblock %}
+
+{% block content %}
+<section class="intro">
+  <h1 class="display display-sm">Contact</h1>
+  <p class="lede">
+    Tell me what you're building and what you need. I read everything and usually
+    reply within a day or two.
+  </p>
+  {% if profile.email %}
+    <p class="prose">Prefer email? Write to <a href="mailto:{{ profile.email }}">{{ profile.email }}</a>{% if profile.phone %}, or call {{ profile.phone }}{% endif %}.</p>
+  {% endif %}
+</section>
+
+<section class="band">
+  <form class="form" method="post" action="{% url 'portfolio:contact' %}" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="field-error">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    {% for field in form.visible_fields %}
+      <div class="field">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<p class="field-help">{{ field.help_text }}</p>{% endif %}
+        {% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+    {% endfor %}
+
+    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+
+    <button class="btn" type="submit">Send message</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block content %}
+<section class="intro">
+  <h1 class="display display-sm">That page isn't here</h1>
+  <p class="lede">The link may be old, or the project may have been unpublished.</p>
+  <p class="intro-actions">
+    <a class="btn" href="{% url 'portfolio:home' %}">Go to the home page</a>
+    <a class="btn btn-quiet" href="{% url 'portfolio:project_list' %}">Browse projects</a>
+  </p>
+</section>
+{% endblock %}

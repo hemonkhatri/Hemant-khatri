@@ -1,0 +1,36 @@
+{% with url_name=request.resolver_match.url_name %}
+<aside class="rail">
+  <div class="rail-inner">
+    <a class="rail-id" href="{% url 'portfolio:home' %}">
+      {% if profile.avatar %}
+        <img class="rail-avatar" src="{{ profile.avatar.url }}" alt="">
+      {% endif %}
+      <span class="rail-name">{{ profile.full_name|default:"Your name" }}</span>
+      <span class="rail-headline">{{ profile.headline|default:"Add your profile in the admin" }}</span>
+    </a>
+
+    <nav class="rail-nav" aria-label="Sections">
+      <a href="{% url 'portfolio:home' %}" {% if url_name == 'home' %}aria-current="page"{% endif %}>Home</a>
+      <a href="{% url 'portfolio:project_list' %}" {% if url_name == 'project_list' or url_name == 'project_detail' %}aria-current="page"{% endif %}>Projects</a>
+      <a href="{% url 'portfolio:contact' %}" {% if url_name == 'contact' %}aria-current="page"{% endif %}>Contact</a>
+      {% if profile.resume %}<a href="{{ profile.resume.url }}" download>Résumé</a>{% endif %}
+    </nav>
+
+    {% if profile.open_to_work %}
+      <p class="rail-status"><span class="dot" aria-hidden="true"></span>Taking on new work</p>
+    {% endif %}
+
+    {% if profile.social_links %}
+      <ul class="rail-links">
+        {% for label, url in profile.social_links %}
+          <li><a href="{{ url }}" rel="me noopener" target="_blank">{{ label }}</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if profile.email %}
+      <a class="rail-mail" href="mailto:{{ profile.email }}">{{ profile.email }}</a>
+    {% endif %}
+  </div>
+</aside>
+{% endwith %}

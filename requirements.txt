@@ -1,0 +1,5 @@
+Django>=5.0,<6.0
+Pillow>=10.0          # needed for ImageField (avatar, project screenshots)
+whitenoise>=6.6       # serves static files in production
+python-dotenv>=1.0    # reads settings from a .env file
+gunicorn>=21.2        # production web server (Linux/macOS)

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.title }} — {{ profile.full_name|default:"Portfolio" }}{% endblock %}
+{% block description %}{{ project.summary }}{% endblock %}
+
+{% block content %}
+<article class="case">
+  <p class="back"><a href="{% url 'portfolio:project_list' %}">All projects</a></p>
+
+  <h1 class="display display-sm">{{ project.title }}</h1>
+  <p class="lede">{{ project.summary }}</p>
+
+  {% if project.image %}
+    <img class="case-image" src="{{ project.image.url }}" alt="Screenshot of {{ project.title }}">
+  {% endif %}
+
+  <dl class="facts">
+    {% if project.role %}<div><dt>Role</dt><dd>{{ project.role }}</dd></div>{% endif %}
+    {% if project.completed_on %}<div><dt>Finished</dt><dd>{{ project.completed_on|date:"F Y" }}</dd></div>{% endif %}
+    {% if project.tech_list %}<div><dt>Built with</dt><dd>{{ project.tech_stack }}</dd></div>{% endif %}
+  </dl>
+
+  <div class="prose">{{ project.description|linebreaks }}</div>
+
+  {% if project.live_url or project.repo_url %}
+    <p class="intro-actions">
+      {% if project.live_url %}<a class="btn" href="{{ project.live_url }}" target="_blank" rel="noopener">Open the live site</a>{% endif %}
+      {% if project.repo_url %}<a class="btn btn-quiet" href="{{ project.repo_url }}" target="_blank" rel="noopener">Read the code</a>{% endif %}
+    </p>
+  {% endif %}
+</article>
+
+{% if others %}
+<section class="band">
+  <h2 class="band-title">More work</h2>
+  <ul class="work">
+    {% for other in others %}
+      <li class="work-row">
+        <a class="work-link" href="{{ other.get_absolute_url }}">
+          <span class="work-body">
+            <span class="work-title">{{ other.title }}</span>
+            <span class="work-summary">{{ other.summary }}</span>
+          </span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}

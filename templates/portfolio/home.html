@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile.full_name|default:"Portfolio" }} — {{ profile.headline|default:"Developer" }}{% endblock %}
+
+{% block content %}
+<section class="intro">
+  <h1 class="display">{{ profile.full_name|default:"Your name here" }}</h1>
+  <p class="lede">{{ profile.headline|default:"Open the admin at /admin/ and fill in your profile to replace this." }}</p>
+  {% if profile.bio %}
+    <div class="prose">{{ profile.bio|linebreaks }}</div>
+  {% endif %}
+  <p class="intro-actions">
+    <a class="btn" href="{% url 'portfolio:contact' %}">Start a conversation</a>
+    {% if project_count %}<a class="btn btn-quiet" href="{% url 'portfolio:project_list' %}">See all {{ project_count }} projects</a>{% endif %}
+  </p>
+</section>
+
+{% if featured_projects %}
+<section class="band">
+  <h2 class="band-title">Selected work</h2>
+  <ul class="work">
+    {% for project in featured_projects %}
+      <li class="work-row">
+        <a class="work-link" href="{{ project.get_absolute_url }}">
+          {% if project.image %}
+            <img class="work-thumb" src="{{ project.image.url }}" alt="" loading="lazy">
+          {% endif %}
+          <span class="work-body">
+            <span class="work-title">{{ project.title }}</span>
+            <span class="work-summary">{{ project.summary }}</span>
+            {% if project.tech_list %}
+              <span class="chips">
+                {% for tech in project.tech_list %}<span class="chip">{{ tech }}</span>{% endfor %}
+              </span>
+            {% endif %}
+          </span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if skills_by_category %}
+<section class="band">
+  <h2 class="band-title">What I work with</h2>
+  <div class="skills">
+    {% for category, skills in skills_by_category.items %}
+      <div class="skill-group">
+        <h3 class="skill-cat">{{ category }}</h3>
+        <ul class="skill-list">
+          {% for skill in skills %}
+            <li class="skill">
+              <span class="skill-name">{{ skill.name }}</span>
+              <span class="meter" role="img" aria-label="{{ skill.proficiency }} out of 100">
+                <span class="meter-fill" style="width: {{ skill.proficiency }}%"></span>
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{% if experiences %}
+<section class="band">
+  <h2 class="band-title">Where I've worked</h2>
+  <ol class="track">
+    {% for job in experiences %}
+      <li class="track-item{% if job.is_current %} track-now{% endif %}">
+        <p class="track-when">{{ job.period }}</p>
+        <h3 class="track-what">
+          {{ job.role }} ·
+          {% if job.company_url %}<a href="{{ job.company_url }}" target="_blank" rel="noopener">{{ job.company }}</a>{% else %}{{ job.company }}{% endif %}
+        </h3>
+        {% if job.location %}<p class="track-where">{{ job.location }}</p>{% endif %}
+        {% if job.bullets %}
+          <ul class="track-points">
+            {% for point in job.bullets %}<li>{{ point }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+
+{% if educations %}
+<section class="band">
+  <h2 class="band-title">Education</h2>
+  <ul class="plain">
+    {% for item in educations %}
+      <li class="edu">
+        <p class="edu-when">{{ item.period }}</p>
+        <p class="edu-what">{{ item.qualification }}, {{ item.school }}</p>
+        {% if item.note %}<p class="edu-note">{{ item.note }}</p>{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% endblock %}
